@@ -20,4 +20,5 @@ export const Ship = styled('div')`
   align-self: center;
   justify-self: center;
   pointer-events: none;
+  ${({ visible = true }) => (!visible ? 'display:none;' : '')}
 `;

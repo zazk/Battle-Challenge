@@ -5,7 +5,11 @@ import GameStore from './game';
 export const StoreContext = createContext(null);
 
 export const useStore = () => {
-  return useContext(StoreContext);
+  const store = useContext(StoreContext);
+  if (store === null) {
+    throw new Error('useStore must be used in StoreContext children');
+  }
+  return store;
 };
 
 const StoreProvider = ({ children }) => {

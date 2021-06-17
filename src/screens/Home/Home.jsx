@@ -1,4 +1,4 @@
-import logo from '../../logo.svg'
+import logo from '../../logo.svg';
 
 export const Home = () => (
   <div className="App">
@@ -15,4 +15,4 @@ export const Home = () => (
       </a>
     </header>
   </div>
-)
+);

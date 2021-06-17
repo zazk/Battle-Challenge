@@ -17,6 +17,7 @@
     "quotes": ["error", "single"],
     "semi": ["error", "always"],
     "react/react-in-jsx-scope": "off",
-    "no-unused-vars": "warn"
+    "no-unused-vars": "warn",
+    "react/self-closing-comp": ["error", { "component": true }]
   }
 }

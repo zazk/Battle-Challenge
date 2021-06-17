@@ -129,6 +129,8 @@ export default class GameStore {
 
       this.isUserTurn = true;
       this.isGaming = true;
+
+      return () => this.endGame();
     }
   }
 
@@ -153,5 +155,12 @@ export default class GameStore {
 
   get currentUserId() {
     return this.isUserTurn ? USER_ID : COMPUTER_ID;
+  }
+
+  get userId() {
+    return USER_ID;
+  }
+  get computerID() {
+    return COMPUTER_ID;
   }
 }

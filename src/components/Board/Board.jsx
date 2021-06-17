@@ -1,13 +1,44 @@
-import { Fragment } from 'react';
+import { Fragment, useEffect, useState, useRef } from 'react';
 import range from 'lodash.range';
 import PropTypes from 'prop-types';
 import { Root, Square, BorderSquare } from './styled';
+import { observer } from 'mobx-react-lite';
+import { autorun } from 'mobx';
+import { useStore } from '../../store';
+
+const SquareEnhanced = observer((props) => {
+  const { x, y } = props;
+  const { game } = useStore();
+  const [disable, setDisable] = useState(false);
+  const subscriptionRef = useRef(null);
+
+  useEffect(
+    () =>
+      autorun(() => {
+        if (game.isGaming) {
+          if (subscriptionRef.current) subscriptionRef.current?.unsubscribe();
+          subscriptionRef.current = game.shotSubscribe(
+            ({ x: shotX, y: shotY, userId }) => {
+              if (userId === game.userId && shotX === x && shotY === y) {
+                setDisable(true);
+              }
+            }
+          );
+        }
+      }),
+    [x, y]
+  );
+
+  useEffect(() => () => subscriptionRef.current?.unsubscribe(), []);
+
+  return <Square {...props} disabled={disable || !game.isUserTurn} />;
+});
 
 export const Board = ({ children, onSelectSquare }) => {
   return (
     <Root>
       {range(100).map((idx) => (
-        <Square
+        <SquareEnhanced
           key={idx}
           x={idx % 10}
           y={(idx / 10) | 0}

@@ -9,10 +9,7 @@ import { useStore } from '../../store';
 
 export const BoardScreen = observer(() => {
   const { game } = useStore();
-  useEffect(() => {
-    game.newGame();
-    return game.endGame;
-  }, []);
+  useEffect(() => game.newGame(), []);
 
   useEffect(
     () =>
@@ -59,10 +56,13 @@ export const BoardScreen = observer(() => {
       {game.userShips.map((ship) => (
         <Ship key={ship.id} shipData={ship} visible={!game.isUserTurn} />
       ))}
-      {game.computerShips.map((ship) => (
-        <Ship key={ship.id} shipData={ship} style={{ opacity: 0.25 }} />
-        // <div key={ship.id}>holo</div>
-      ))}
+      {
+        // TODO: remove
+        game.computerShips.map((ship) => (
+          <Ship key={ship.id} shipData={ship} style={{ opacity: 0.25 }} />
+          // <div key={ship.id}>holo</div>
+        ))
+      }
       {game.shotsAsArray.map(
         (shot) =>
           shot.userId === game.currentUserId && (

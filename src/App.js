@@ -4,6 +4,7 @@ import GlobalStyles from './components/GlobalStyles';
 import StoreProvider from './store';
 import NavBar from './components/NavBar';
 import routes from './routes';
+import ShotContextProvider from './contexts/shotContext';
 
 const Root = styled('div')`
   display: grid;
@@ -15,18 +16,20 @@ function App() {
   return (
     <StoreProvider>
       <GlobalStyles />
-      <Router>
-        <Root>
-          <NavBar />
-          <Switch>
-            {routes.map(({ path, Component, exact = true }) => (
-              <Route key={path} path={path} exact={exact}>
-                <Component />
-              </Route>
-            ))}
-          </Switch>
-        </Root>
-      </Router>
+      <ShotContextProvider>
+        <Router>
+          <Root>
+            <NavBar />
+            <Switch>
+              {routes.map(({ path, Component, exact = true }) => (
+                <Route key={path} path={path} exact={exact}>
+                  <Component />
+                </Route>
+              ))}
+            </Switch>
+          </Root>
+        </Router>
+      </ShotContextProvider>
     </StoreProvider>
   );
 }

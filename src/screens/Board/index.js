@@ -1,1 +1,1 @@
-export { Board as default } from './Board';
+export { BoardScreen as default } from './Board';

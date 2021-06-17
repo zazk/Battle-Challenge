@@ -1,52 +1,20 @@
-import { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import range from 'lodash.range';
+import { useEffect, useState, useCallback } from 'react';
+import styled from 'styled-components/macro';
+import Board from '../../components/Board';
+import Ship from '../../components/Ship';
+import useShot from '../../hooks/useShot';
+import { Observer } from 'mobx-react-lite';
+import { v4 as uuidv4 } from 'uuid';
 
-const Root = styled('section')`
-  display: grid;
-  grid-template-rows: auto repeat(10, 1fr);
-  grid-template-columns: auto repeat(10, 1fr);
-  max-height: 80vh;
-  max-width: 80vh;
-  padding: 10px;
-`;
-
-const Ship = styled('div')`
-  grid-column: ${({ x }) => x + 1} / span
-    ${({ large, vertical }) => (!vertical && large) || 1};
-  grid-row: ${({ y }) => y + 1} / span
-    ${({ large, vertical }) => (vertical && large) || 1};
-  background: ${({ large }) => {
-    if (large === 1) return 'red';
-    if (large === 2) return 'blue';
-    if (large === 3) return 'green';
-    if (large === 4) return 'yellow';
-    return 'black';
-  }};
-  border: 10px solid #0005;
-  border-radius: 20px;
-  height: calc(100% - 20px);
-  width: calc(100% - 20px);
+const Shot = styled('div')`
+  grid-column: ${({ x }) => x + 1};
+  grid-row: ${({ y }) => y + 1};
+  background-color: ${({ acerted }) => (acerted ? 'blue' : 'red')};
+  height: calc(100% - 40px);
+  width: calc(100% - 40px);
   align-self: center;
   justify-self: center;
-`;
-
-const Square = styled('div')`
-  outline: 1px solid;
-  aspect-ratio: 1 / 1;
-  grid-column: ${({ x }) => x + 2};
-  grid-row: ${({ y }) => y + 2};
-`;
-
-const BorderSquare = styled('div')`
-  outline: 1px solid;
-  grid-column: ${({ x }) => x ?? 1};
-  grid-row: ${({ y }) => y ?? 1};
-  display: grid;
-  align-items: center;
-  justify-items: center;
-  min-width: 40px;
-  min-height: 40px;
+  border-radius: 100%;
 `;
 
 const randomPosition = ({ x = 9, y = 9 } = {}) => ({
@@ -89,31 +57,75 @@ const createShipsData = () => {
   return newPostions;
 };
 
-export const Board = () => {
-  const [positions, setPositions] = useState([]);
+export const BoardScreen = () => {
+  const [usePositions, setUserPositions] = useState([]);
+  const [computerPosition, setComputerPosition] = useState([]);
+  const [isUserTurn, setTurno] = useState(true);
 
-  useEffect(() => setPositions(createShipsData()), []);
+  const [ids] = useState(() => ({
+    computer: uuidv4(),
+    user: uuidv4(),
+  }));
+
+  const shotContext = useShot();
+
+  useEffect(() => setUserPositions(createShipsData()), []);
+  useEffect(() => setComputerPosition(createShipsData()), []);
+
+  const makeShot = useCallback(
+    (x, y, user) => {
+      shotContext.shot(x, y, user);
+      setTimeout(() => {
+        setTurno((s) => !s);
+      }, 1000);
+    },
+    [shotContext, ids]
+  );
+
+  useEffect(() => {
+    if (!isUserTurn) {
+      const { x, y } = randomPosition({ x: 10, y: 10 });
+      console.log('compute shot', x, y);
+      makeShot(x, y, ids.computer);
+    }
+  }, [isUserTurn, makeShot, ids]);
 
   return (
-    <Root>
-      {range(100).map((idx) => (
-        <Square key={idx} x={idx % 10} y={(idx / 10) | 0} />
-      ))}
+    <div>
+      <Board
+        onSelectSquare={(...positions) => makeShot(...positions, ids.user)}
+      >
+        {
+          // !isUserTurn &&
+          usePositions.map(({ x, y, ...data }) => (
+            <Ship x={x} y={y} {...data} key={`${x}-${y}`} />
+          ))
+        }
+        {isUserTurn && (
+          <>
+            {
+              //   computerPosition.map(({ x, y, ...data }) => (
+              //   <Ship x={x + 1} y={y + 1} {...data} key={`${x}-${y}`} />
+              // ))
+            }
 
-      {range(10).map((idx) => (
-        <BorderSquare key={`border-row-${idx}`} y={idx + 2} x={1}>
-          {idx}
-        </BorderSquare>
-      ))}
-      {range(10).map((idx) => (
-        <BorderSquare key={`border-column-${idx}`} x={idx + 2} y={1}>
-          {String.fromCharCode(65 + idx)}
-        </BorderSquare>
-      ))}
-
-      {positions.map(({ x, y, ...data }) => (
-        <Ship x={x + 1} y={y + 1} {...data} key={`${x}-${y}`} />
-      ))}
-    </Root>
+            <Observer>
+              {() =>
+                shotContext.shots.map(({ x, y, acerted, user }) =>
+                  user === (isUserTurn ? ids.user : ids.computer) ? (
+                    <Shot
+                      key={`s-${x}-${y}`}
+                      x={x + 1}
+                      y={y + 1}
+                      acerted={acerted}
+                    />
+                  ) : null
+                )
+              }
+            </Observer>
+          </>
+        )}
+      </Board>
+    </div>
   );
 };

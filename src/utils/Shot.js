@@ -1,9 +1,8 @@
-import { v4 as uuidv4 } from 'uuid';
 import { makeAutoObservable } from 'mobx';
 
 export default class Shot {
   constructor(x, y, userId, hit = false) {
-    this.id = uuidv4();
+    this.id = `${userId}-${x}-${y}`;
     this.x = x;
     this.y = y;
     this.userId = userId;

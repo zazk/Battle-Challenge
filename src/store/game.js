@@ -1,9 +1,9 @@
 import { makeAutoObservable } from 'mobx';
 import { BehaviorSubject, Subscription } from 'rxjs';
-// import { v4 as uuidv4 } from 'uuid';
 import randomPosition from '../utils/randomPosition';
 import Ship from '../utils/ShipData';
 import Shot from '../utils/Shot';
+import { v4 as uuidv4 } from 'uuid';
 
 const createShipsData = (boardSize) => {
   // boolean[10][10]
@@ -43,9 +43,6 @@ const createShipsData = (boardSize) => {
   return newPostions;
 };
 
-const COMPUTER_ID = Symbol('COMPUTER_ID');
-const USER_ID = Symbol('COMPUTER_ID');
-
 export default class GameStore {
   constructor() {
     this.isGaming = false;
@@ -56,6 +53,9 @@ export default class GameStore {
     this.boardSize = 10;
     this.userShipsAlive = 0;
     this.computerShipsAlive = 0;
+    this.userId = uuidv4();
+    this.computerId = uuidv4();
+
     makeAutoObservable(this, {
       _subscriptions: false,
       _shostStream: false,
@@ -71,26 +71,34 @@ export default class GameStore {
     if (shot) shot.setHit(true);
     if (shipSunk) {
       console.log('barco undidoooooo!!!!!');
-      if (shot.userId === USER_ID) this.computerShipsAlive--;
+      if (shot.userId === this.userId) this.computerShipsAlive--;
       else this.userShipsAlive--;
     }
   }
 
   _shot(x, y, userId) {
     const shot = new Shot(x, y, userId);
+    if (this.shots.has(shot.id)) throw new Error('shot already exist!');
     this.shots.set(shot.id, shot);
     this._shostStream.next(shot.toJSON());
   }
 
   makeUserShot(x, y) {
-    this._shot(x, y, USER_ID);
+    this._shot(x, y, this.userId);
   }
-  makeComputerShot() {
-    const { x, y } = randomPosition({
-      x: this.boardSize,
-      y: this.boardSize,
-    });
-    this._shot(x, y, COMPUTER_ID);
+  async makeComputerShot() {
+    try {
+      console.log('makeComputerShot');
+      const { x, y } = randomPosition({
+        x: this.boardSize - 1,
+        y: this.boardSize - 1,
+      });
+      this._shot(x, y, this.computerId);
+    } catch (e) {
+      console.error(e);
+      await new Promise((r) => setTimeout(r, 100));
+      await this.makeComputerShot();
+    }
   }
 
   newGame() {
@@ -109,7 +117,7 @@ export default class GameStore {
           data.vertical,
           data.x,
           data.y,
-          USER_ID
+          this.userId
         );
         this.userShips.push(ship);
         this._subscriptions.add(Ship.subscribeToGameShots(ship, this));
@@ -121,7 +129,7 @@ export default class GameStore {
           data.vertical,
           data.x,
           data.y,
-          COMPUTER_ID
+          this.computerId
         );
         this.computerShips.push(ship);
         this._subscriptions.add(Ship.subscribeToGameShots(ship, this));
@@ -154,13 +162,6 @@ export default class GameStore {
   }
 
   get currentUserId() {
-    return this.isUserTurn ? USER_ID : COMPUTER_ID;
-  }
-
-  get userId() {
-    return USER_ID;
-  }
-  get computerID() {
-    return COMPUTER_ID;
+    return this.isUserTurn ? this.userId : this.computerId;
   }
 }

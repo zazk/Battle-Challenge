@@ -44,7 +44,7 @@ export const BoardScreen = observer(() => {
     try {
       if (game.isUserTurn) {
         game.makeUserShot(x, y);
-        // setTimeout(() => game.nextTurn(), 1000);
+        setTimeout(() => game.nextTurn(), 1000);
       }
     } catch (e) {
       console.error(e);

@@ -4,7 +4,8 @@ import { observer } from 'mobx-react-lite';
 const Shot = styled('div')`
   grid-column: ${({ x }) => x + 1};
   grid-row: ${({ y }) => y + 1};
-  background-color: ${({ hit }) => (hit ? 'blue' : 'red')};
+  background-color: ${({ hit, isUserShot }) =>
+    isUserShot ? (hit ? 'green' : 'brown') : hit ? 'blue' : 'red'};
   height: calc(100% - 40px);
   width: calc(100% - 40px);
   align-self: center;

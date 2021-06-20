@@ -22,6 +22,9 @@ export const Square = styled('button')`
   &:active {
     background-color: #0004;
   }
+  &:disabled {
+    background #0555;
+  }
 `;
 
 export const BorderSquare = styled('div')`

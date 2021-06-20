@@ -1,51 +1,16 @@
 import { makeAutoObservable } from 'mobx';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import randomPosition from '../utils/randomPosition';
+import createShipsData from '../utils/createShipsData';
 import Ship from '../utils/ShipData';
 import Shot from '../utils/Shot';
 import { v4 as uuidv4 } from 'uuid';
 
-const createShipsData = (boardSize) => {
-  // boolean[10][10]
-  const indices = Array(boardSize)
-    .fill(undefined)
-    .map(() => Array(boardSize).fill(false));
-  const newPostions = [];
-
-  for (let i = 0; i < 10; i++) {
-    let large = 0;
-    let isInvalid = false;
-    let vertical = !!(Math.floor(Math.random() * 5) % 2);
-
-    if (i < 4) large = 1;
-    else if (i < 7) large = 2;
-    else if (i < 9) large = 3;
-    else large = 4;
-
-    const { x, y } = randomPosition({
-      x: boardSize - large,
-      y: boardSize - large,
-    });
-
-    for (let o = 0; o < large; o++)
-      if (!isInvalid) {
-        isInvalid = vertical ? indices[x][y + o] : indices[x + o][y];
-      }
-
-    if (!isInvalid) {
-      newPostions.push({ x, y, large, vertical });
-      for (let o = 0; o < large; o++) {
-        if (vertical) indices[x][y + o] = true;
-        else indices[x + o][y] = true;
-      }
-    } else i--;
-  }
-  return newPostions;
-};
-
 export default class GameStore {
   constructor() {
+    this.isGameReady = false;
     this.isGaming = false;
+    this.isPaused = false;
     this.shots = new Map();
     this.isUserTurn = false;
     this.userShips = [];
@@ -90,13 +55,13 @@ export default class GameStore {
     try {
       console.log('makeComputerShot');
       const { x, y } = randomPosition({
-        x: this.boardSize - 1,
-        y: this.boardSize - 1,
+        x: this.boardSize,
+        y: this.boardSize,
       });
       this._shot(x, y, this.computerId);
     } catch (e) {
       console.error(e);
-      await new Promise((r) => setTimeout(r, 100));
+      await new Promise((r) => setTimeout(r, 1000));
       await this.makeComputerShot();
     }
   }
@@ -134,21 +99,26 @@ export default class GameStore {
         this.computerShips.push(ship);
         this._subscriptions.add(Ship.subscribeToGameShots(ship, this));
       });
-
-      this.isUserTurn = true;
-      this.isGaming = true;
-
-      return () => this.endGame();
     }
+  }
+
+  startGame() {
+    this.isUserTurn = true;
+    this.isGaming = true;
+    return () => this.endGame();
   }
 
   endGame() {
     if (this.isGaming) {
-      this.game?.endGame();
+      this.isGaming = false;
       this._shostStream.complete();
       this._subscriptions.unsubscribe();
       this._subscriptions = null;
     }
+  }
+
+  pausePlayGame() {
+    this.isPaused = !this.isPaused;
   }
 
   nextTurn() {

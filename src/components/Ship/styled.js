@@ -20,5 +20,11 @@ export const Ship = styled('div')`
   align-self: center;
   justify-self: center;
   pointer-events: none;
-  ${({ visible = true }) => (!visible ? 'display:none;' : '')}
+  ${({ visible = true, showOnlyIfSunk = false, isSunk }) => {
+    // !visible || showOnlyIfSunk
+    if (showOnlyIfSunk) {
+      return visible && isSunk ? '' : 'display:none;';
+    }
+    return visible ? '' : 'display:none;';
+  }}
 `;

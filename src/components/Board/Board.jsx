@@ -31,7 +31,12 @@ const SquareEnhanced = observer((props) => {
 
   useEffect(() => () => subscriptionRef.current?.unsubscribe(), []);
 
-  return <Square {...props} disabled={disable || !game.isUserTurn} />;
+  return (
+    <Square
+      {...props}
+      disabled={disable || !game.isGaming || game.isPaused || !game.isUserTurn}
+    />
+  );
 });
 
 export const Board = ({ children, onSelectSquare }) => {

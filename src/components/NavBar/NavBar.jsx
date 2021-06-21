@@ -1,39 +1,33 @@
-import styled from 'styled-components';
-import { NavLink } from 'react-router-dom';
+import { useHistory, useRouteMatch } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import clsx from 'clsx';
+import PropTypes from 'prop-types';
 
-const Nav = styled('nav')`
-  display: grid;
-  grid-gap: 10px;
-`;
-
-const Link = styled(NavLink)`
-  background-color: #0005;
-  padding: 10px;
-  text-align: center;
-  border-radius: 6px;
-  margin: 0 10px;
-  &.selected {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-    margin-right: 0;
-  }
-`;
-
-export const NavBar = () => {
+const Link = ({ icon, path }) => {
+  const history = useHistory();
+  const isPath = useRouteMatch({ path, strict: true });
   return (
-    <Nav>
-      <Link activeClassName="selected" to="/">
-        home
-      </Link>
-      <Link activeClassName="selected" to="/board">
-        board
-      </Link>
-      <Link activeClassName="selected" to="/history">
-        history
-      </Link>
-      <Link activeClassName="selected" to="/config">
-        config
-      </Link>
-    </Nav>
+    <button
+      className={clsx('btn', isPath && 'btn-green')}
+      onClick={() => history.push(path)}
+    >
+      <FontAwesomeIcon icon={icon} />
+    </button>
   );
 };
+
+Link.propTypes = {
+  icon: PropTypes.string,
+  path: PropTypes.string,
+};
+
+export const NavBar = () => (
+  <div className="p-6 w-24">
+    <div className="flex flex-col space-y-4">
+      {/* <Link icon="home" path="/" /> */}
+      <Link icon="th" path="/board" />
+      <Link icon="history" path="/history" />
+      <Link icon="cog" path="/config" />
+    </div>
+  </div>
+);

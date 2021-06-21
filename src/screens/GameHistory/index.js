@@ -1,1 +1,1 @@
-export default () => null;
+export { History as default } from './History';

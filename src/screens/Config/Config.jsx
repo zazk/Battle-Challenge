@@ -7,9 +7,7 @@ export const Config = observer(() => {
 
   return (
     <div className="py-6">
-      <header>
-        <h1 className="text-3xl text-white">Config</h1>
-      </header>
+      <h2 className="text-3xl text-white">Config</h2>
       <section className="py-6">
         <label>
           <span className="text-white">User Name</span>

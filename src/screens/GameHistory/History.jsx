@@ -7,9 +7,7 @@ export const History = observer(() => {
 
   return (
     <div className="py-6 pr-6">
-      <header>
-        <h1 className="text-3xl text-white">History</h1>
-      </header>
+      <h2 className="text-3xl text-white">History</h2>
       <section className="pt-6 overflow-y-auto">
         {store.history.items.map((data) => (
           <HistoryItem

@@ -21,8 +21,8 @@ Link.propTypes = {
   path: PropTypes.string,
 };
 
-export const NavBar = () => (
-  <div className="p-6 w-24">
+export const NavBar = ({ className, ...props }) => (
+  <div className={clsx('w-12', className)} {...props}>
     <div className="flex flex-col space-y-4">
       {/* <Link icon="home" path="/" /> */}
       <Link icon="th" path="/board" />
@@ -31,3 +31,7 @@ export const NavBar = () => (
     </div>
   </div>
 );
+
+NavBar.propTypes = {
+  className: PropTypes.string,
+};

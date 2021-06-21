@@ -87,7 +87,6 @@ const Game = observer(({ game }) => {
   // );
   return (
     <div
-      className="py-6"
       style={{
         height: 'calc(40vw + 40px + 61px)',
         width: '40vw',

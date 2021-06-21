@@ -41,15 +41,19 @@ const SquareEnhanced = observer((props) => {
 
 export const Board = ({ children, onSelectSquare }) => {
   return (
-    <Root>
-      {range(100).map((idx) => (
-        <SquareEnhanced
-          key={idx}
-          x={idx % 10}
-          y={(idx / 10) | 0}
-          onClick={() => onSelectSquare(idx % 10, (idx / 10) | 0)}
-        />
-      ))}
+    <Root className="p-6 rounded-lg shadow-md bg-white bg-opacity-40">
+      {range(100).map((idx) => {
+        const x = idx % 10;
+        const y = (idx / 10) | 0;
+        return (
+          <SquareEnhanced
+            key={idx}
+            x={x}
+            y={y}
+            onClick={() => onSelectSquare(x, y)}
+          />
+        );
+      })}
 
       {range(10).map((idx) => (
         <Fragment key={`border-${idx}`}>

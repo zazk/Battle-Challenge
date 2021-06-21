@@ -2,16 +2,13 @@ import { useEffect, useCallback } from 'react';
 import Ship from '../../components/Ship';
 import Shot from '../../components/Shot';
 import Board from '../../components/Board';
+import GameControl from '../../components/GameControl';
 import { observer } from 'mobx-react-lite';
 import { reaction } from 'mobx';
 import randomPosition from '../../utils/randomPosition';
-
 import { useStore } from '../../store';
 
-export const BoardScreen = observer(() => {
-  const { game } = useStore();
-  useEffect(() => game.newGame(), []);
-
+const Game = observer(({ game }) => {
   useEffect(
     () =>
       reaction(
@@ -88,88 +85,75 @@ export const BoardScreen = observer(() => {
   //     ),
   //   []
   // );
+  return (
+    <div
+      className="py-6"
+      style={{
+        height: 'calc(40vw + 40px + 61px)',
+        width: '40vw',
+        margin: '0 auto',
+      }}
+    >
+      <GameControl game={game} />
+
+      <Board onSelectSquare={onUserShot}>
+        {game.userShips.map((ship) => (
+          <Ship
+            key={ship.id}
+            shipData={ship}
+            // visible={!game.isUserTurn}
+            style={{ opacity: !game.isUserTurn ? 1 : 0.125 }}
+          />
+        ))}
+
+        {game.computerShips.map((ship) => (
+          <Ship
+            key={ship.id}
+            shipData={ship}
+            visible={game.isUserTurn}
+            showOnlyIfSunk
+          />
+        ))}
+
+        {game.shotsAsArray
+          .filter(({ userId }) => userId === game.computerId)
+          .map((shot) => (
+            <Shot
+              key={shot.id}
+              shot={shot}
+              style={{ opacity: !game.isUserTurn ? 1 : 0.125 }}
+            />
+          ))}
+
+        {game.shotsAsArray
+          .filter(({ userId }) => userId === game.userId)
+          .map((shot) => (
+            <Shot
+              key={shot.id}
+              shot={shot}
+              isUserShot
+              style={{ opacity: game.isUserTurn ? 1 : 0.5 }}
+            />
+          ))}
+      </Board>
+    </div>
+  );
+});
+
+export const BoardScreen = observer(() => {
+  const store = useStore();
 
   return (
     <div>
-      <div>
-        <button onClick={() => game.startGame()} disabled={game.isGaming}>
-          empezar Juego
+      {!store.isGaming && (
+        <button
+          onClick={() => store.newGame()}
+          className="btn btn-green mx-auto block mt-40"
+        >
+          New Game
         </button>
-        <button onClick={() => game.endGame()} disabled={!game.isGaming}>
-          terminar Juego
-        </button>
-        <button onClick={() => game.pausePlayGame()} disabled={!game.isGaming}>
-          {game.isPaused ? 'continuar' : 'pausar'} Juego
-        </button>
-        <span>
-          turno de {game.isUserTurn ? 'el usuario' : 'la computadora'}
-        </span>
-      </div>
-
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)' }}>
-        <div>
-          <p style={{ textAlign: 'center' }}>tablero del usuario</p>
-          <Board onSelectSquare={onUserShot}>
-            {game.userShips.map((ship) => (
-              <Ship
-                key={ship.id}
-                shipData={ship}
-                // visible={!game.isUserTurn}
-                style={{ opacity: !game.isUserTurn ? 1 : 0.125 }}
-              />
-            ))}
-
-            {game.computerShips.map((ship) => (
-              <Ship
-                key={ship.id}
-                shipData={ship}
-                visible={game.isUserTurn}
-                showOnlyIfSunk
-              />
-            ))}
-
-            {game.shotsAsArray
-              .filter(({ userId }) => userId === game.computerId)
-              .map((shot) => (
-                <Shot
-                  key={shot.id}
-                  shot={shot}
-                  style={{ opacity: !game.isUserTurn ? 1 : 0.125 }}
-                />
-              ))}
-
-            {game.shotsAsArray
-              .filter(({ userId }) => userId === game.userId)
-              .map((shot) => (
-                <Shot
-                  key={shot.id}
-                  shot={shot}
-                  isUserShot
-                  style={{ opacity: game.isUserTurn ? 1 : 0.5 }}
-                />
-              ))}
-          </Board>
-        </div>
-        <div>
-          <p style={{ textAlign: 'center' }}>tablero de la computadora</p>
-          <Board onSelectSquare={onUserShot}>
-            {game.computerShips.map((ship) => (
-              <Ship
-                key={ship.id}
-                shipData={ship}
-                // visible={!game.isUserTurn}
-                style={{ opacity: game.isUserTurn ? 1 : 0.5 }}
-              />
-            ))}
-
-            {game.shotsAsArray
-              .filter(({ userId }) => userId === game.userId)
-              .map((shot) => (
-                <Shot key={shot.id} shot={shot} isUserShot />
-              ))}
-          </Board>
-        </div>
-      </div>
+      )}
+      {store.isGaming && <Game game={store.game} />}
     </div>
   );
 });

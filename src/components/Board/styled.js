@@ -4,9 +4,8 @@ export const Root = styled('section')`
   display: grid;
   grid-template-rows: auto repeat(10, 1fr);
   grid-template-columns: auto repeat(10, 1fr);
-  max-height: 80vh;
-  max-width: 80vh;
-  padding: 10px;
+  max-height: 40vw;
+  max-width: 40vw;
 `;
 
 export const Square = styled('button')`

@@ -1,9 +1,11 @@
 import { makeAutoObservable } from 'mobx';
 import Game from './Game';
+import Config from './Config';
 
 export default class Store {
   constructor() {
     this.game = null;
+    this.config = new Config();
 
     makeAutoObservable(this);
   }

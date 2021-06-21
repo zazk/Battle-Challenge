@@ -1,1 +1,1 @@
-export default () => null;
+export { Config as default } from './Config';

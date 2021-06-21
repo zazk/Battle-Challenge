@@ -1,6 +1,6 @@
 import { createContext, useContext, useState } from 'react';
 import PropTypes from 'prop-types';
-import GameStore from './game';
+import Store from './Store';
 
 export const StoreContext = createContext(null);
 
@@ -13,9 +13,7 @@ export const useStore = () => {
 };
 
 const StoreProvider = ({ children }) => {
-  const [store] = useState(() => ({
-    game: new GameStore(),
-  }));
+  const [store] = useState(() => new Store());
 
   return <StoreContext.Provider value={store}>{children}</StoreContext.Provider>;
 };

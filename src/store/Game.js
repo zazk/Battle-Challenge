@@ -1,13 +1,16 @@
 import { makeAutoObservable } from 'mobx';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject, AsyncSubject, Subscription } from 'rxjs';
 import randomPosition from '../utils/randomPosition';
 import createShipsData from '../utils/createShipsData';
 import Ship from '../utils/ShipData';
 import Shot from '../utils/Shot';
 import { v4 as uuidv4 } from 'uuid';
+import moment from 'moment';
 
 export default class GameStore {
   constructor() {
+    this.id = uuidv4();
+
     this.isGameReady = false;
     this.isGaming = false;
     this.isPaused = false;
@@ -16,14 +19,44 @@ export default class GameStore {
     this.userShips = [];
     this.computerShips = [];
     this.boardSize = 10;
-    this.userShipsAlive = 0;
-    this.computerShipsAlive = 0;
+    this.userShipsAlive = 10;
+    this.computerShipsAlive = 10;
+
     this.userId = uuidv4();
     this.computerId = uuidv4();
+
+    this.gameStatusObervable = new AsyncSubject();
+    this._shostStream = new BehaviorSubject([]);
+    this._subscriptions = new Subscription();
+
+    createShipsData(this.boardSize).forEach((data) => {
+      const ship = new Ship(
+        data.large,
+        data.vertical,
+        data.x,
+        data.y,
+        this.userId
+      );
+      this.userShips.push(ship);
+      this._subscriptions.add(Ship.subscribeToGameShots(ship, this));
+    });
+
+    createShipsData(this.boardSize).forEach((data) => {
+      const ship = new Ship(
+        data.large,
+        data.vertical,
+        data.x,
+        data.y,
+        this.computerId
+      );
+      this.computerShips.push(ship);
+      this._subscriptions.add(Ship.subscribeToGameShots(ship, this));
+    });
 
     makeAutoObservable(this, {
       _subscriptions: false,
       _shostStream: false,
+      gameStatusObervable: false,
     });
   }
 
@@ -51,9 +84,9 @@ export default class GameStore {
   makeUserShot(x, y) {
     this._shot(x, y, this.userId);
   }
+
   async makeComputerShot() {
     try {
-      console.log('makeComputerShot');
       const { x, y } = randomPosition({
         x: this.boardSize,
         y: this.boardSize,
@@ -66,46 +99,9 @@ export default class GameStore {
     }
   }
 
-  newGame() {
-    if (!this.isGaming) {
-      this._shostStream = new BehaviorSubject([]);
-      this._subscriptions = new Subscription();
-      this.shots.clear();
-      this.userShips.clear();
-      this.computerShips.clear();
-      this.userShipsAlive = 10;
-      this.computerShipsAlive = 10;
-
-      createShipsData(this.boardSize).forEach((data) => {
-        const ship = new Ship(
-          data.large,
-          data.vertical,
-          data.x,
-          data.y,
-          this.userId
-        );
-        this.userShips.push(ship);
-        this._subscriptions.add(Ship.subscribeToGameShots(ship, this));
-      });
-
-      createShipsData(this.boardSize).forEach((data) => {
-        const ship = new Ship(
-          data.large,
-          data.vertical,
-          data.x,
-          data.y,
-          this.computerId
-        );
-        this.computerShips.push(ship);
-        this._subscriptions.add(Ship.subscribeToGameShots(ship, this));
-      });
-    }
-  }
-
   startGame() {
     this.isUserTurn = true;
     this.isGaming = true;
-    return () => this.endGame();
   }
 
   endGame() {
@@ -114,6 +110,8 @@ export default class GameStore {
       this._shostStream.complete();
       this._subscriptions.unsubscribe();
       this._subscriptions = null;
+      this.gameStatusObervable.next();
+      this.gameStatusObervable.complete();
     }
   }
 
@@ -133,5 +131,13 @@ export default class GameStore {
 
   get currentUserId() {
     return this.isUserTurn ? this.userId : this.computerId;
+  }
+
+  get gameData() {
+    return {
+      id: this.id,
+      win: false,
+      date: moment().format('L h:mm a'),
+    };
   }
 }

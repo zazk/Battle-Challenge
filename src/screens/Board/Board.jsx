@@ -1,3 +1,4 @@
+import { Prompt } from 'react-router-dom';
 import { useEffect, useCallback } from 'react';
 import Ship from '../../components/Ship';
 import Shot from '../../components/Shot';
@@ -142,6 +143,10 @@ const Game = observer(({ game }) => {
 export const BoardScreen = observer(() => {
   const store = useStore();
 
+  useEffect(() => {
+    return () => store.isGaming && store.game.endGame();
+  }, []);
+
   return (
     <div>
       {!store.isGaming && (
@@ -153,6 +158,7 @@ export const BoardScreen = observer(() => {
         </button>
       )}
       {store.isGaming && <Game game={store.game} />}
+      <Prompt when={store.isGaming} message="Are you sure you want to leave?" />
     </div>
   );
 });

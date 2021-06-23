@@ -17,13 +17,13 @@ const SquareEnhanced = observer((props) => {
       autorun(() => {
         if (game.isGaming) {
           if (subscriptionRef.current) subscriptionRef.current?.unsubscribe();
-          subscriptionRef.current = game.shotSubscribe(
-            ({ x: shotX, y: shotY, userId }) => {
-              if (userId === game.userId && shotX === x && shotY === y) {
-                setDisable(true);
-              }
+          subscriptionRef.current = game.shotSubscribe((shot) => {
+            if (!shot) return;
+            const { x: shotX, y: shotY, userId } = shot;
+            if (userId === game.userId && shotX === x && shotY === y) {
+              setDisable(true);
             }
-          );
+          });
         }
       }),
     [x, y]

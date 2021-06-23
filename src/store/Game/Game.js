@@ -5,10 +5,9 @@ import createShipsData from '../../utils/createShipsData';
 import Ship from '../../utils/ShipData';
 import Shot from '../../utils/Shot';
 import { v4 as uuidv4 } from 'uuid';
-import moment from 'moment';
 
 export class Game {
-  constructor() {
+  constructor(level = 0) {
     this.id = uuidv4();
 
     this.isGameReady = false;
@@ -21,6 +20,9 @@ export class Game {
     this.boardSize = 10;
     this.userShipsAlive = 10;
     this.computerShipsAlive = 10;
+    this.level = level;
+    this.startDate = null;
+    this.endDate = null;
 
     this.userId = uuidv4();
     this.computerId = uuidv4();
@@ -102,15 +104,17 @@ export class Game {
   startGame() {
     this.isUserTurn = true;
     this.isGaming = true;
+    this.startDate = new Date();
   }
 
   endGame() {
     if (this.isGaming) {
-      const stats = this.gameData;
+      this.endDate = new Date();
       this.isGaming = false;
       this._shostStream.complete();
       this._subscriptions.unsubscribe();
       this._subscriptions = null;
+      const stats = this.gameData;
       this.gameStatusObervable.next(stats);
       this.gameStatusObervable.complete();
       return stats;
@@ -138,9 +142,10 @@ export class Game {
   get gameData() {
     return {
       id: this.id,
-      // win: false,
-      useWin: this.userShipsAlive > this.computerShipsAlive,
-      date: new Date(), // moment().format('L h:mm a'),
+      useWin: !this.isGaming && this.userShipsAlive > this.computerShipsAlive,
+      level: this.level,
+      startDate: this.startDate,
+      endDate: this.endDate,
     };
   }
 }

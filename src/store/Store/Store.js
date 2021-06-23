@@ -1,7 +1,7 @@
 import { makeAutoObservable } from 'mobx';
-import Game from './Game';
-import Config from './Config';
-import History from './History';
+import Game from '../Game';
+import Config from '../Config';
+import History from '../History';
 
 export class Store {
   constructor() {
@@ -17,10 +17,10 @@ export class Store {
   }
 
   newGame() {
-    const game = new Game();
-    game.gameStatusObervable.subscribe(() => {
+    const game = new Game(this.config.level);
+    game.gameStatusObervable.subscribe((stats) => {
       this.history.addNewItem({
-        ...game.gameData,
+        ...stats,
         name: this.config.name,
       });
       this.game = null;

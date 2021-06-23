@@ -2,6 +2,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { observer } from 'mobx-react-lite';
 import PropTypes from 'prop-types';
 
+const levels = ['easy', 'medium', 'hard'];
+
 const GameControl = observer(({ game }) => {
   return (
     <div className="mb-4">
@@ -29,6 +31,7 @@ const GameControl = observer(({ game }) => {
       >
         <FontAwesomeIcon icon="pause" />
       </button>
+      <span className="text-white mr-2">Level: {levels[game.level]} |</span>
       <span className="text-white">
         Turno de {game.isUserTurn ? 'el usuario' : 'la computadora'}
       </span>

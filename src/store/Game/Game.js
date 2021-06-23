@@ -1,13 +1,13 @@
 import { makeAutoObservable } from 'mobx';
 import { BehaviorSubject, AsyncSubject, Subscription } from 'rxjs';
-import randomPosition from '../utils/randomPosition';
-import createShipsData from '../utils/createShipsData';
-import Ship from '../utils/ShipData';
-import Shot from '../utils/Shot';
+import randomPosition from '../../utils/randomPosition';
+import createShipsData from '../../utils/createShipsData';
+import Ship from '../../utils/ShipData';
+import Shot from '../../utils/Shot';
 import { v4 as uuidv4 } from 'uuid';
 import moment from 'moment';
 
-export default class GameStore {
+export class Game {
   constructor() {
     this.id = uuidv4();
 
@@ -26,7 +26,7 @@ export default class GameStore {
     this.computerId = uuidv4();
 
     this.gameStatusObervable = new AsyncSubject();
-    this._shostStream = new BehaviorSubject([]);
+    this._shostStream = new BehaviorSubject();
     this._subscriptions = new Subscription();
 
     createShipsData(this.boardSize).forEach((data) => {
@@ -106,12 +106,14 @@ export default class GameStore {
 
   endGame() {
     if (this.isGaming) {
+      const stats = this.gameData;
       this.isGaming = false;
       this._shostStream.complete();
       this._subscriptions.unsubscribe();
       this._subscriptions = null;
-      this.gameStatusObervable.next();
+      this.gameStatusObervable.next(stats);
       this.gameStatusObervable.complete();
+      return stats;
     }
   }
 
@@ -136,8 +138,9 @@ export default class GameStore {
   get gameData() {
     return {
       id: this.id,
-      win: false,
-      date: moment().format('L h:mm a'),
+      // win: false,
+      useWin: this.userShipsAlive > this.computerShipsAlive,
+      date: new Date(), // moment().format('L h:mm a'),
     };
   }
 }

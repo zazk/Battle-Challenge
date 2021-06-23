@@ -1,7 +1,7 @@
 import { makeAutoObservable } from 'mobx';
 import { makePersistable } from 'mobx-persist-store';
 
-export default class Config {
+export class Config {
   constructor() {
     this.name = '';
     this.level = 0;

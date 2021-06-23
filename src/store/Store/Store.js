@@ -3,7 +3,7 @@ import Game from './Game';
 import Config from './Config';
 import History from './History';
 
-export default class Store {
+export class Store {
   constructor() {
     this.game = null;
     this.history = new History();

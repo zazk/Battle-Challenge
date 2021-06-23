@@ -1,6 +1,7 @@
-import randomPosition from '../utils/randomPosition';
+import randomPosition from '../randomPosition';
+import random from 'lodash.random';
 
-export default function createShipsData(boardSize) {
+export function createShipsData(boardSize) {
   // boolean[10][10]
   const indices = Array(boardSize)
     .fill(undefined)
@@ -10,7 +11,7 @@ export default function createShipsData(boardSize) {
   for (let i = 0; i < 10; i++) {
     let large = 0;
     let isInvalid = false;
-    let vertical = !!(Math.floor(Math.random() * 5) % 2);
+    let vertical = !!random(1);
 
     if (i < 4) large = 1;
     else if (i < 7) large = 2;
@@ -18,8 +19,8 @@ export default function createShipsData(boardSize) {
     else large = 4;
 
     const { x, y } = randomPosition({
-      x: boardSize - large + 1,
-      y: boardSize - large + 1,
+      x: boardSize - large,
+      y: boardSize - large,
     });
 
     for (let o = 0; o < large; o++)

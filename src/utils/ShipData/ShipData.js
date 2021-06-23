@@ -1,7 +1,7 @@
 import { makeAutoObservable } from 'mobx';
 import { v4 as uuidv4 } from 'uuid';
 
-export default class Ship {
+export class Ship {
   constructor(large = 1, isVertical = true, x = 0, y = 0, useId) {
     this.large = large;
     this.isVertical = isVertical;
@@ -37,7 +37,9 @@ export default class Ship {
   }
 
   static subscribeToGameShots(ship, game) {
-    return game.shotSubscribe(({ x, y, userId, id }) => {
+    return game.shotSubscribe((shotData) => {
+      if (!shotData) return;
+      const { x, y, userId, id } = shotData;
       if (userId !== ship.useId && ship.isInPosition(x, y)) {
         game.shotAcerted(ship.setShot(x, y), id);
       }

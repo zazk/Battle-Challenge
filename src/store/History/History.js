@@ -1,7 +1,7 @@
 import { makeAutoObservable } from 'mobx';
 import { makePersistable } from 'mobx-persist-store';
 
-export default class History {
+export class History {
   constructor() {
     this.items = [];
 

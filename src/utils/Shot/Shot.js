@@ -1,8 +1,8 @@
 import { makeAutoObservable } from 'mobx';
 
-export default class Shot {
+export class Shot {
   constructor(x, y, userId, hit = false) {
-    this.id = `${userId}-${x}-${y}`;
+    this.id = Shot.createId(x, y, userId);
     this.x = x;
     this.y = y;
     this.userId = userId;
@@ -22,5 +22,9 @@ export default class Shot {
       userId: this.userId,
       hit: this.hit,
     };
+  }
+
+  static createId(x, y, userId) {
+    return `${userId}-${x}-${y}`;
   }
 }

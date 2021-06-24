@@ -8,7 +8,7 @@ export class Config {
 
     makeAutoObservable(this);
     makePersistable(this, {
-      name: 'BattleshipStore',
+      name: 'BattleshipStore:config',
       properties: ['name', 'level'],
       storage: window.localStorage,
     });

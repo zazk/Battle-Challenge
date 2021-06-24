@@ -10,10 +10,12 @@ export class Store {
     this.config = new Config();
 
     makeAutoObservable(this);
+
+    this.newGame();
   }
 
   get isGaming() {
-    return !!this.game;
+    return !!this.game?.isGaming;
   }
 
   newGame() {
@@ -23,9 +25,8 @@ export class Store {
         ...stats,
         name: this.config.name,
       });
-      this.game = null;
     });
-    game.startGame();
+    // game.startGame();
     this.game = game;
   }
 }

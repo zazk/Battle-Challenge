@@ -2,8 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-
-const levels = ['easy', 'medium', 'hard'];
+import { GAME_LEVELS, DATE_FORMAT } from '../../utils/constants';
 
 const HistoryItem = ({ useWin, name, endDate, onDelete, level }) => (
   <div
@@ -27,8 +26,8 @@ const HistoryItem = ({ useWin, name, endDate, onDelete, level }) => (
       {useWin ? 'Winner' : 'Loser'}
     </div>
     <div className="px-3">{name || <i>anonymous</i>}</div>
-    <div className="px-3">level: {levels[level]}</div>
-    <div className="px-3 ml-auto">{moment(endDate).format('L h:mm a')}</div>
+    <div className="px-3">level: {GAME_LEVELS[level]}</div>
+    <div className="px-3 ml-auto">{moment(endDate).format(DATE_FORMAT)}</div>
     <div>
       <button className="btn-icon text-gray-600 -my-4 -mr-3" onClick={onDelete}>
         <FontAwesomeIcon icon="trash" />

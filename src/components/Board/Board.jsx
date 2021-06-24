@@ -1,71 +1,41 @@
-import { Fragment, useEffect, useState, useRef } from 'react';
+import { Fragment, useMemo } from 'react';
 import range from 'lodash.range';
 import PropTypes from 'prop-types';
-import { Root, Square, BorderSquare } from './styled';
-import { observer } from 'mobx-react-lite';
-import { autorun } from 'mobx';
-import { useStore } from '../../store';
+import { Root } from './styled';
+import Square, { BorderSquare } from '../GameSquare';
 
-const SquareEnhanced = observer((props) => {
-  const { x, y } = props;
-  const { game } = useStore();
-  const [disable, setDisable] = useState(false);
-  const subscriptionRef = useRef(null);
-
-  useEffect(
+export const Board = ({ children, onSelectSquare, getGame }) => {
+  const squares = useMemo(
     () =>
-      autorun(() => {
-        if (game.isGaming) {
-          if (subscriptionRef.current) subscriptionRef.current?.unsubscribe();
-          subscriptionRef.current = game.shotSubscribe((shot) => {
-            if (!shot) return;
-            const { x: shotX, y: shotY, userId } = shot;
-            if (userId === game.userId && shotX === x && shotY === y) {
-              setDisable(true);
-            }
-          });
-        }
-      }),
-    [x, y]
-  );
-
-  useEffect(() => () => subscriptionRef.current?.unsubscribe(), []);
-
-  return (
-    <Square
-      {...props}
-      disabled={disable || !game.isGaming || game.isPaused || !game.isUserTurn}
-    />
-  );
-});
-
-export const Board = ({ children, onSelectSquare }) => {
-  return (
-    <Root className="p-6 rounded-lg shadow-md bg-white bg-opacity-40">
-      {range(100).map((idx) => {
+      range(100).map((idx) => {
         const x = idx % 10;
         const y = (idx / 10) | 0;
+        const includeBorder = idx < 10;
         return (
-          <SquareEnhanced
-            key={idx}
-            x={x}
-            y={y}
-            onClick={() => onSelectSquare(x, y)}
-          />
+          <Fragment key={idx}>
+            {includeBorder && (
+              <>
+                <BorderSquare y={idx + 1} x={0}>
+                  {idx + 1}
+                </BorderSquare>
+                <BorderSquare x={idx + 1} y={0} horizontal>
+                  {String.fromCharCode(65 + idx)}
+                </BorderSquare>
+              </>
+            )}
+            <Square x={x} y={y} onClick={() => onSelectSquare(x, y)} getGame={getGame} />
+          </Fragment>
         );
-      })}
+      }),
+    [onSelectSquare]
+  );
 
-      {range(10).map((idx) => (
-        <Fragment key={`border-${idx}`}>
-          <BorderSquare y={idx + 2} x={1}>
-            {idx}
-          </BorderSquare>
-          <BorderSquare x={idx + 2} y={1}>
-            {String.fromCharCode(65 + idx)}
-          </BorderSquare>
-        </Fragment>
-      ))}
-      {children}
+  return (
+    <Root className="p-6 rounded-lg shadow-md bg-white bg-opacity-40">
+      <svg style={{ outline: '1px solid', width: '100%' }} viewBox="0 0 440 440">
+        {squares}
+        {children}
+      </svg>
     </Root>
   );
 };
@@ -73,4 +43,5 @@ export const Board = ({ children, onSelectSquare }) => {
 Board.propTypes = {
   children: PropTypes.node,
   onSelectSquare: PropTypes.func,
+  getGame: PropTypes.func,
 };

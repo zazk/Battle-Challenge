@@ -1,10 +1,11 @@
 import styled from 'styled-components/macro';
 
 export const Root = styled('section')`
-  display: grid;
+  /* display: grid;
   grid-template-rows: auto repeat(10, 1fr);
   grid-template-columns: auto repeat(10, 1fr);
   max-height: 40vw;
+  max-width: 40vw; */
   max-width: 40vw;
 `;
 

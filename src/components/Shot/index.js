@@ -1,19 +1,22 @@
-import styled from 'styled-components/macro';
 import { observer } from 'mobx-react-lite';
+import clsx from 'clsx';
+import fire from '../../assets/fire.png';
 
-const Shot = styled('div')`
-  grid-column: ${({ x }) => x + 1};
-  grid-row: ${({ y }) => y + 1};
-  background-color: ${({ hit, isUserShot }) =>
-    isUserShot ? (hit ? 'green' : 'brown') : hit ? 'blue' : 'red'};
-  height: calc(100% - 40px);
-  width: calc(100% - 40px);
-  align-self: center;
-  justify-self: center;
-  border-radius: 100%;
-  pointer-events: none;
-`;
-
-export default observer(({ shot, ...props }) => (
-  <Shot x={shot.x + 1} y={shot.y + 1} hit={shot.hit} {...props} />
-));
+export default observer(({ shot, className }) =>
+  !shot.hit ? (
+    <circle
+      cx={(shot.x + 1) * 40 + 20}
+      cy={(shot.y + 1) * 40 + 20}
+      r="10"
+      className={clsx(className, 'shot')}
+    />
+  ) : (
+    <image
+      x={(shot.x + 1) * 40 + 10}
+      y={(shot.y + 1) * 40 + 10}
+      href={fire}
+      width="20"
+      className={className}
+    />
+  )
+);

@@ -7,7 +7,7 @@ export class History {
 
     makeAutoObservable(this);
     makePersistable(this, {
-      name: 'BattleshipStore',
+      name: 'BattleshipStore:history',
       properties: ['items'],
       storage: window.localStorage,
     });

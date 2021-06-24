@@ -78,6 +78,7 @@ export class Game {
 
   _shot(x, y, userId) {
     const shot = new Shot(x, y, userId);
+    console.log(shot);
     if (this.shots.has(shot.id)) throw new Error('shot already exist!');
     this.shots.set(shot.id, shot);
     this._shostStream.next(shot.toJSON());
@@ -88,6 +89,7 @@ export class Game {
   }
 
   async makeComputerShot() {
+    console.groupCollapsed('ComputerTurn');
     try {
       const { x, y } = randomPosition({
         x: this.boardSize,
@@ -99,6 +101,7 @@ export class Game {
       await new Promise((r) => setTimeout(r, 1000));
       await this.makeComputerShot();
     }
+    console.groupEnd();
   }
 
   startGame() {
@@ -147,5 +150,14 @@ export class Game {
       startDate: this.startDate,
       endDate: this.endDate,
     };
+  }
+
+  scuareIsDisabled(x, y) {
+    return (
+      this.shots.has(Shot.createId(x, y, this.userId)) ||
+      !this.isGaming ||
+      this.isPaused ||
+      !this.isUserTurn
+    );
   }
 }

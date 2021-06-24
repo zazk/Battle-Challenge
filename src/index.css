@@ -30,3 +30,27 @@
     hover:bg-white
     hover:bg-opacity-20;
 }
+
+.ship {
+  filter: drop-shadow(-3px 2px 2px rgba(0, 0, 0, 0.2));
+}
+.ship.ship-sunk {
+  filter: drop-shadow(-3px 2px 2px rgba(246, 124, 0, 0.2));
+}
+
+.ship[data-size='1'] {
+  fill: #c73866;
+}
+.ship[data-size='2'] {
+  fill: #f3676e;
+}
+.ship[data-size='3'] {
+  fill: #fd8f52;
+}
+.ship[data-size='4'] {
+  fill: #ffbd71;
+}
+
+.shot {
+  fill: #403380;
+}

@@ -1,9 +1,11 @@
 import { useEffect } from 'react';
 import { reaction, autorun } from 'mobx';
 // import randomPosition from '../../utils/randomPosition';
+import useAutorunWithSubscription from '../../hooks/useAutorunWIthSubscription';
 
 const useGameController = (store) => {
   useEffect(() => {
+    store.newGame();
     return () => store.isGaming && store.game.endGame();
   }, []);
 
@@ -27,31 +29,17 @@ const useGameController = (store) => {
           if (!userShipsAlive || !computerShipsAlive) {
             store.game.endGame();
           }
-          if (!userShipsAlive) {
-            console.log('ganó la PC!!!!');
-          } else if (!computerShipsAlive) {
-            console.log('ganó el usuario!!!!');
-          }
         }
       ),
     []
   );
 
   // change turn automaticaly
-  useEffect(() => {
-    let shotSubscription;
-    const dispose = autorun(() => {
-      shotSubscription?.unsubscribe();
-      shotSubscription = store.game.shotSubscribe((shot) => {
-        if (shot) setTimeout(() => store.game.nextTurn(), 1000);
-      });
-    });
-
-    return () => {
-      dispose();
-      shotSubscription?.unsubscribe();
-    };
-  }, []);
+  useAutorunWithSubscription(() =>
+    store.game.shotSubscribe((shot) => {
+      if (shot) setTimeout(() => store.game.nextTurn(), 1000);
+    })
+  );
 };
 // useEffect(
 //   () =>

@@ -3,6 +3,7 @@ import Ship from '../../components/Ship';
 import Shot from '../../components/Shot';
 import Board from '../../components/Board';
 import GameControl from '../../components/GameControl';
+import EndGamePrompt from '../../components/EndGamePrompt';
 import { useCallback } from 'react';
 import { observer } from 'mobx-react-lite';
 import { computed } from 'mobx';
@@ -85,7 +86,7 @@ export const BoardScreen = observer(() => {
       </section>
 
       <Prompt when={store.isGaming} message="Are you sure you want to leave?" />
+      <EndGamePrompt getGame={() => store.game} />
     </div>
   );
 });
-// </div>

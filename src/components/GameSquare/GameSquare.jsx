@@ -16,6 +16,7 @@ export const Square = observer(({ getGame, x, y, onClick }) => {
     />
   );
 });
+
 Square.propTypes = {
   x: PropTypes.number,
   y: PropTypes.number,

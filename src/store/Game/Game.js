@@ -32,25 +32,13 @@ export class Game {
     this._subscriptions = new Subscription();
 
     createShipsData(this.boardSize).forEach((data) => {
-      const ship = new Ship(
-        data.large,
-        data.vertical,
-        data.x,
-        data.y,
-        this.userId
-      );
+      const ship = new Ship(data.large, data.vertical, data.x, data.y, this.userId);
       this.userShips.push(ship);
       this._subscriptions.add(Ship.subscribeToGameShots(ship, this));
     });
 
     createShipsData(this.boardSize).forEach((data) => {
-      const ship = new Ship(
-        data.large,
-        data.vertical,
-        data.x,
-        data.y,
-        this.computerId
-      );
+      const ship = new Ship(data.large, data.vertical, data.x, data.y, this.computerId);
       this.computerShips.push(ship);
       this._subscriptions.add(Ship.subscribeToGameShots(ship, this));
     });
@@ -60,6 +48,10 @@ export class Game {
       _shostStream: false,
       gameStatusObervable: false,
     });
+  }
+
+  get isGameOver() {
+    return !!this.endDate;
   }
 
   shotSubscribe(subscriber) {
@@ -116,11 +108,9 @@ export class Game {
       this.isGaming = false;
       this._shostStream.complete();
       this._subscriptions.unsubscribe();
-      this._subscriptions = null;
-      const stats = this.gameData;
-      this.gameStatusObervable.next(stats);
+      this.gameStatusObervable.next(this.gameData);
       this.gameStatusObervable.complete();
-      return stats;
+      return this.gameData;
     }
   }
 
@@ -152,7 +142,7 @@ export class Game {
     };
   }
 
-  scuareIsDisabled(x, y) {
+  squareIsDisabled(x, y) {
     return (
       this.shots.has(Shot.createId(x, y, this.userId)) ||
       !this.isGaming ||

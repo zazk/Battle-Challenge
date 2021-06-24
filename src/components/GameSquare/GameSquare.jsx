@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 
 export const Square = observer(({ getGame, x, y, onClick }) => {
-  const isDisabled = computed(() => getGame().scuareIsDisabled(x, y)).get();
+  const isDisabled = computed(() => getGame().squareIsDisabled(x, y)).get();
   return (
     <rect
       x={(x + 1) * 40}

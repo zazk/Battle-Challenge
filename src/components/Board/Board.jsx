@@ -1,7 +1,6 @@
 import { Fragment, useMemo } from 'react';
 import range from 'lodash.range';
 import PropTypes from 'prop-types';
-import { Root } from './styled';
 import Square, { BorderSquare } from '../GameSquare';
 
 export const Board = ({ children, onSelectSquare, getGame }) => {
@@ -31,12 +30,13 @@ export const Board = ({ children, onSelectSquare, getGame }) => {
   );
 
   return (
-    <Root className="p-6 rounded-lg shadow-md bg-white bg-opacity-40">
-      <svg style={{ outline: '1px solid', width: '100%' }} viewBox="0 0 440 440">
-        {squares}
-        {children}
-      </svg>
-    </Root>
+    <svg
+      viewBox="0 0 440 440"
+      className="p-6 rounded-lg shadow-md bg-white bg-opacity-40 pl-4"
+    >
+      {squares}
+      {children}
+    </svg>
   );
 };
 

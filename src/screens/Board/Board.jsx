@@ -32,7 +32,7 @@ export const BoardScreen = observer(() => {
   ).get();
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center" style={{ maxHeight: '80vh' }}>
       <div className="flex" style={{ minWidth: '40vw' }}>
         {!store.game.isGaming && (
           <div>
@@ -75,6 +75,15 @@ export const BoardScreen = observer(() => {
           />
         ))}
       </Board>
+      <section className="text-white divide-x-2 flex mt-2 divide-gray-600">
+        <p className="px-3">
+          Your ships: <b>{store.game.userShipsAlive}</b>
+        </p>
+        <p className="px-3">
+          Enemy ships: <b>{store.game.computerShipsAlive}</b>
+        </p>
+      </section>
+
       <Prompt when={store.isGaming} message="Are you sure you want to leave?" />
     </div>
   );

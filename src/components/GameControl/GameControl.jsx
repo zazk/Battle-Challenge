@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 const levels = ['easy', 'medium', 'hard'];
 
-const GameControl = observer(({ getGame }) => {
+export const GameControl = observer(({ getGame }) => {
   const game = getGame();
   return (
     <div className="mb-4">
@@ -43,5 +43,3 @@ const GameControl = observer(({ getGame }) => {
 GameControl.propTypes = {
   game: PropTypes.object,
 };
-
-export default GameControl;

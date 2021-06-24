@@ -54,3 +54,17 @@
 .shot {
   fill: #403380;
 }
+
+.square {
+  stroke: #281d4e;
+  fill: #5b49b6;
+}
+.square:hover {
+  fill: #493a92;
+}
+.square:active {
+  fill: #372c6d;
+}
+.square.disabled {
+  fill: #584b9b;
+}

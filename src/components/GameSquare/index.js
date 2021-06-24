@@ -1,2 +1,2 @@
-export * from './styled';
-export { SquareEnhanced as default } from './GameSquare';
+export * from './BorderSquare';
+export { Square as default } from './GameSquare';

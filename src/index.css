@@ -3,16 +3,14 @@
 @tailwind utilities;
 
 #container {
-  display: grid;
-  grid-template-areas: 'nav main';
+  @apply p-6 container mx-auto md:grid gap-6 min-h-screen;
+
   grid-template-columns: 48px auto;
   grid-template-rows: 40px auto;
-  gap: 1.4rem;
+  grid-template-areas: 'nav main';
   grid-template-areas:
     'nav header'
     'nav body';
-  min-height: 100vh;
-  @apply p-6 container mx-auto;
 }
 
 .btn {

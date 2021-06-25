@@ -22,8 +22,8 @@ Link.propTypes = {
 };
 
 export const NavBar = ({ className, ...props }) => (
-  <div className={clsx('w-12', className)} {...props}>
-    <div className="flex flex-col space-y-4">
+  <div className={clsx('w-12 mb-3 md:mb-0', className)} {...props}>
+    <div className="flex flex-row space-x-4 md:flex-col md:space-y-4 md:space-x-0">
       <Link icon="th" path="/board" />
       <Link icon="history" path="/history" />
       <Link icon="cog" path="/config" />

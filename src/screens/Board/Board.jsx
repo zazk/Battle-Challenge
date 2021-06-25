@@ -33,7 +33,10 @@ export const BoardScreen = observer(() => {
   ).get();
 
   return (
-    <div className="flex flex-col items-center" style={{ maxHeight: '80vh' }}>
+    <div
+      className="flex flex-col items-center mt-4 md:mt-0"
+      style={{ maxHeight: '80vh' }}
+    >
       <div className="flex" style={{ minWidth: '40vw' }}>
         {!store.game.isGaming && (
           <div>

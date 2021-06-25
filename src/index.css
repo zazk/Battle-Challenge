@@ -80,3 +80,8 @@
 .square.disabled {
   fill: #584b9b;
 }
+
+.board {
+  box-shadow: 20px 20px 60px #676c73, -20px -20px 60px #8b929b;
+  @apply p-6 rounded-lg shadow-md bg-white bg-opacity-40 pl-4;
+}

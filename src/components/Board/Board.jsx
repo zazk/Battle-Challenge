@@ -30,10 +30,7 @@ export const Board = ({ children, onSelectSquare, getGame }) => {
   );
 
   return (
-    <svg
-      viewBox="0 0 440 440"
-      className="p-6 rounded-lg shadow-md bg-white bg-opacity-40 pl-4"
-    >
+    <svg viewBox="0 0 440 440" className="board">
       {squares}
       {children}
     </svg>

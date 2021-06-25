@@ -18,8 +18,8 @@ export const Square = observer(({ getGame, x, y, onClick }) => {
 });
 
 Square.propTypes = {
-  x: PropTypes.number,
-  y: PropTypes.number,
-  getGame: PropTypes.func,
+  x: PropTypes.number.isRequired,
+  y: PropTypes.number.isRequired,
+  getGame: PropTypes.func.isRequired,
   onClick: PropTypes.func,
 };

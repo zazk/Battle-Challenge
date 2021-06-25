@@ -15,6 +15,7 @@ export const Config = observer(() => {
           <input
             type="text"
             name="user-name"
+            // eslint-disable-next-line max-len
             className="ml-4 bg-whtie bg-opacity-30 border-2 border-white rounded-lg px-2 py-1"
             onChange={(e) => store.config.setName(e.target.value)}
             value={store.config.name}

@@ -1,6 +1,5 @@
 import { makeAutoObservable } from 'mobx';
 import { BehaviorSubject, AsyncSubject, Subscription } from 'rxjs';
-import randomPosition from '../../utils/randomPosition';
 import createShipsData from '../../utils/createShipsData';
 import Ship from '../../utils/ShipData';
 import Shot from '../../utils/Shot';
@@ -80,20 +79,8 @@ export class Game {
     this._shot(x, y, this.userId);
   }
 
-  async makeComputerShot() {
-    console.groupCollapsed('ComputerTurn');
-    try {
-      const { x, y } = randomPosition({
-        x: this.boardSize,
-        y: this.boardSize,
-      });
-      this._shot(x, y, this.computerId);
-    } catch (e) {
-      console.error(e);
-      await new Promise((r) => setTimeout(r, 1000));
-      await this.makeComputerShot();
-    }
-    console.groupEnd();
+  makeComputerShot(x, y) {
+    this._shot(x, y, this.computerId);
   }
 
   startGame() {
@@ -135,7 +122,7 @@ export class Game {
   get gameData() {
     return {
       id: this.id,
-      useWin: !this.isGaming && this.userShipsAlive > this.computerShipsAlive,
+      userWins: !this.isGaming && this.userShipsAlive > this.computerShipsAlive,
       level: this.level,
       startDate: this.startDate,
       endDate: this.endDate,

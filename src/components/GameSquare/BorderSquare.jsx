@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-export const BorderSquare = ({ x, y, horizontal, children }) => {
+export const BorderSquare = ({ x, y, horizontal = true, children }) => {
   const realX = x * 40 + (horizontal ? 0 : 10);
   const realY = y * 40 + (!horizontal ? 0 : 10);
   const width = !horizontal ? '30' : '40';
@@ -21,8 +21,8 @@ export const BorderSquare = ({ x, y, horizontal, children }) => {
 };
 
 BorderSquare.propTypes = {
-  x: PropTypes.number,
-  y: PropTypes.number,
-  horizontal: PropTypes,
+  x: PropTypes.number.isRequired,
+  y: PropTypes.number.isRequired,
+  horizontal: PropTypes.bool,
   children: PropTypes.node,
 };

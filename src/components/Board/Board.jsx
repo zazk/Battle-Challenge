@@ -43,5 +43,5 @@ export const Board = ({ children, onSelectSquare, getGame }) => {
 Board.propTypes = {
   children: PropTypes.node,
   onSelectSquare: PropTypes.func,
-  getGame: PropTypes.func,
+  getGame: PropTypes.func.isRequired,
 };

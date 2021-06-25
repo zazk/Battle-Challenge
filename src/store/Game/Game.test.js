@@ -67,7 +67,7 @@ test('Game  ship data', () => {
   expect(game.isGaming).toBe(false);
   expect(stats).toEqual({
     id: expect.any(String),
-    useWin: false,
+    userWins: false,
     date: expect.any(Date),
   });
   expect(endGameSubscriber).toBeCalledTimes(1);

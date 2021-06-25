@@ -27,6 +27,6 @@ export const Ship = observer(({ shipData, visible = true, showOnlyIfSunk = false
 });
 
 Ship.propTypes = {
-  shipData: PropTypes.object,
+  shipData: PropTypes.object.isRequired,
   visible: PropTypes.bool,
 };

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import { GAME_LEVELS, DATE_FORMAT } from '../../utils/constants';
 
-export const HistoryItem = ({ useWin, name, endDate, onDelete, level }) => (
+export const HistoryItem = ({ userWins, name, endDate, onDelete, level }) => (
   <div
     className={clsx(
       'p-4',
@@ -14,14 +14,14 @@ export const HistoryItem = ({ useWin, name, endDate, onDelete, level }) => (
       'rounded-lg',
       'shadow-md',
       'bg-opacity-60',
-      useWin ? ['bg-green-100', 'divide-green-800'] : ['bg-red-100', 'divide-red-900']
+      userWins ? ['bg-green-100', 'divide-green-800'] : ['bg-red-100', 'divide-red-900']
     )}
   >
     <div className="px-3 flex font-semibold">
       <div className={clsx('text-gray-600', 'mr-3')}>
         <FontAwesomeIcon icon="history" />
       </div>
-      {useWin ? 'Winner' : 'Loser'}
+      {userWins ? 'Winner' : 'Loser'}
     </div>
     <div className="px-3">{name || <i>anonymous</i>}</div>
     <div className="px-3">level: {GAME_LEVELS[level]}</div>
@@ -35,9 +35,9 @@ export const HistoryItem = ({ useWin, name, endDate, onDelete, level }) => (
 );
 
 HistoryItem.propTypes = {
-  useWin: PropTypes.bool,
-  name: PropTypes.string,
-  endDate: PropTypes.string,
-  level: PropTypes.number,
-  onDelete: PropTypes.func,
+  userWins: PropTypes.bool.isRequired,
+  name: PropTypes.string.isRequired,
+  endDate: PropTypes.string.isRequired,
+  level: PropTypes.number.isRequired,
+  onDelete: PropTypes.func.isRequired,
 };

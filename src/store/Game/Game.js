@@ -1,5 +1,6 @@
 import { makeAutoObservable } from 'mobx';
 import { BehaviorSubject, AsyncSubject, Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
 import createShipsData from '../../utils/createShipsData';
 import Ship from '../../utils/ShipData';
 import Shot from '../../utils/Shot';
@@ -54,14 +55,13 @@ export class Game {
   }
 
   shotSubscribe(subscriber) {
-    return this._shostStream.subscribe(subscriber);
+    return this._shostStream.pipe(filter((value) => !!value)).subscribe(subscriber);
   }
 
   shotAcerted(shipSunk, shotId) {
     const shot = this.shots.get(shotId);
     if (shot) shot.setHit(true);
     if (shipSunk) {
-      console.log('barco undidoooooo!!!!!');
       if (shot.userId === this.userId) this.computerShipsAlive--;
       else this.userShipsAlive--;
     }
@@ -69,7 +69,6 @@ export class Game {
 
   _shot(x, y, userId) {
     const shot = new Shot(x, y, userId);
-    console.log(shot);
     if (this.shots.has(shot.id)) throw new Error('shot already exist!');
     this.shots.set(shot.id, shot);
     this._shostStream.next(shot.toJSON());

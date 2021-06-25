@@ -25,7 +25,6 @@ export class Ship {
 
   setShot(x, y) {
     if (this.isInPosition(x, y)) {
-      console.log('me dieroooonnn!!!');
       const shotPosition = this.isVertical ? y - this.y : x - this.x;
       this.shots[shotPosition] = true;
     }
@@ -37,9 +36,7 @@ export class Ship {
   }
 
   static subscribeToGameShots(ship, game) {
-    return game.shotSubscribe((shotData) => {
-      if (!shotData) return;
-      const { x, y, userId, id } = shotData;
+    return game.shotSubscribe(({ x, y, userId, id }) => {
       if (userId !== ship.useId && ship.isInPosition(x, y)) {
         game.shotAcerted(ship.setShot(x, y), id);
       }

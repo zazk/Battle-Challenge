@@ -69,6 +69,7 @@
 .square {
   stroke: #281d4e;
   fill: #5b49b6;
+  cursor: pointer;
 }
 .square:hover {
   fill: #493a92;

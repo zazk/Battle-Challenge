@@ -37,7 +37,7 @@ export const HistoryItem = ({ userWins, name, endDate, onDelete, level }) => (
 HistoryItem.propTypes = {
   userWins: PropTypes.bool.isRequired,
   name: PropTypes.string.isRequired,
-  endDate: PropTypes.string.isRequired,
+  endDate: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]).isRequired,
   level: PropTypes.number.isRequired,
   onDelete: PropTypes.func.isRequired,
 };

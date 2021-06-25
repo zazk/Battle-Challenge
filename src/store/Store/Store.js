@@ -19,14 +19,17 @@ export class Store {
   }
 
   newGame() {
-    const game = new Game(this.config.level);
-    game.gameStatusObervable.subscribe((stats) => {
-      this.history.addNewItem({
-        ...stats,
-        name: this.config.name,
-      });
+    this.game = new Game(this.config.level);
+    const subscription = this.game.gameStatusObervable.subscribe({
+      complete: () => {
+        subscription.unsubscribe();
+      },
+      next: (gameData) => {
+        this.history.addNewItem({
+          ...gameData,
+          name: this.config.name,
+        });
+      },
     });
-    // game.startGame();
-    this.game = game;
   }
 }

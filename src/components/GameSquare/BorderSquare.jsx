@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-export const BorderSquare = ({ x, y, horizontal = true, children }) => {
+export const BorderSquare = ({ x, y, horizontal = false, children }) => {
   const realX = x * 40 + (horizontal ? 0 : 10);
   const realY = y * 40 + (!horizontal ? 0 : 10);
   const width = !horizontal ? '30' : '40';

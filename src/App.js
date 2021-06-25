@@ -1,5 +1,4 @@
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import styled from 'styled-components/macro';
 import StoreProvider from './store';
 import NavBar from './components/NavBar';
 import routes from './routes';
@@ -32,23 +31,11 @@ library.add(
   faCheckSquare
 );
 
-const Root = styled('div')`
-  display: grid;
-  grid-template-areas: 'nav main';
-  grid-template-columns: 48px auto;
-  grid-template-rows: 40px auto;
-  gap: 1.4rem;
-  grid-template-areas:
-    'nav header'
-    'nav body';
-  min-height: 100vh;
-`;
-
 const App = () => (
   <StoreProvider>
     <Router>
       <div className="bg-gray-800">
-        <Root className="p-6 container mx-auto">
+        <div id="container">
           <NavBar style={{ gridArea: 'nav' }} />
           <header style={{ gridArea: 'header' }}>
             <h1 className="text-white text-4xl">Battleship</h1>
@@ -62,7 +49,7 @@ const App = () => (
               ))}
             </Switch>
           </main>
-        </Root>
+        </div>
       </div>
     </Router>
   </StoreProvider>

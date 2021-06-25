@@ -8,7 +8,7 @@ const createShip = (large, isVertical) => {
     ? `M 20 5 l -10 10 v ${size} l 5 5  h  10 l  5 -5 v -${size} z`
     : `M 5 20 l  10 10 h ${size} l 5 -5 v -10 l -5 -5 h -${size} z`;
 };
-
+// TODO: drag and drop
 export const Ship = observer(({ shipData, visible = true, showOnlyIfSunk = false }) => {
   const hidden = showOnlyIfSunk ? !(visible && shipData.isSunk) : !visible;
 

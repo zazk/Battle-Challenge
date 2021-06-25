@@ -2,6 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
+#container {
+  display: grid;
+  grid-template-areas: 'nav main';
+  grid-template-columns: 48px auto;
+  grid-template-rows: 40px auto;
+  gap: 1.4rem;
+  grid-template-areas:
+    'nav header'
+    'nav body';
+  min-height: 100vh;
+  @apply p-6 container mx-auto;
+}
+
 .btn {
   @apply py-2
     px-4

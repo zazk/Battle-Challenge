@@ -31,7 +31,7 @@ const useGameController = (store) => {
   // change turn automaticaly
   useAutorunWithSubscription(() =>
     store.game.shotSubscribe(() => {
-      setTimeout(() => store.game.nextTurn(), 1000);
+      setTimeout(() => store.game.nextTurn(), 800);
     })
   );
 };

@@ -3,7 +3,6 @@ import { computed } from 'mobx';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 
-// TODO: block on user shot
 export const Square = observer(({ getGame, x, y, onClick }) => {
   const isDisabled = computed(() => getGame().squareIsDisabled(x, y)).get();
   return (
@@ -12,7 +11,7 @@ export const Square = observer(({ getGame, x, y, onClick }) => {
       y={(y + 1) * 40}
       height="40"
       width="40"
-      onClick={onClick}
+      onClick={() => !isDisabled && onClick()}
       className={clsx('square', isDisabled && 'disabled')}
     />
   );

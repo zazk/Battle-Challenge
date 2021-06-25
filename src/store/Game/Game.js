@@ -23,6 +23,7 @@ export class Game {
     this.level = level;
     this.startDate = null;
     this.endDate = null;
+    this.currentUserAvalilableShots = 0;
 
     this.userId = uuidv4();
     this.computerId = uuidv4();
@@ -76,16 +77,19 @@ export class Game {
 
   makeUserShot(x, y) {
     this._shot(x, y, this.userId);
+    this.currentUserAvalilableShots--;
   }
 
   makeComputerShot(x, y) {
     this._shot(x, y, this.computerId);
+    this.currentUserAvalilableShots--;
   }
 
   startGame() {
     this.isUserTurn = true;
     this.isGaming = true;
     this.startDate = new Date();
+    this.currentUserAvalilableShots = 1;
   }
 
   endGame() {
@@ -107,6 +111,7 @@ export class Game {
   nextTurn() {
     if (this.isGaming) {
       this.isUserTurn = !this.isUserTurn;
+      this.currentUserAvalilableShots = 1;
     }
   }
 
@@ -133,7 +138,8 @@ export class Game {
       this.shots.has(Shot.createId(x, y, this.userId)) ||
       !this.isGaming ||
       this.isPaused ||
-      !this.isUserTurn
+      !this.isUserTurn ||
+      this.currentUserAvalilableShots === 0
     );
   }
 }

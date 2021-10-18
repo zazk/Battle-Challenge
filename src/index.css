@@ -22,7 +22,8 @@
     text-white
     bg-white
     bg-opacity-10
-    hover:bg-opacity-20;
+    hover:bg-opacity-20
+    whitespace-nowrap;
 }
 
 .btn:disabled {

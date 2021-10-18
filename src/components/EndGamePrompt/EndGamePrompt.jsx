@@ -25,12 +25,12 @@ export const EndGamePrompt = observer(({ getGame }) => {
   }, [game]);
 
   if (!show) return null;
-
+  console.log('userWin', userWin);
   const node = (
     // eslint-disable-next-line max-len
     <div className="absolute w-full h-full top-0 flex items-center justify-center bg-gray-500 bg-opacity-50">
       <div className="bg-white p-6 rounded-lg">
-        you {userWin ? 'Win! 🎉 😎' : 'Lost! 💻'}
+        You {userWin ? 'Win! 🎉 😎' : 'Lost! 💻'}
       </div>
     </div>
   );

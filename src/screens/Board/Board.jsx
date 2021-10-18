@@ -37,10 +37,10 @@ export const BoardScreen = observer(() => {
       className="flex flex-col items-center mt-4 md:mt-0"
       style={{ maxHeight: '80vh' }}
     >
-      <div className="flex" style={{ minWidth: '40vw' }}>
+      <div className="flex">
         {!store.game.isGaming && (
           <div>
-            <button onClick={() => store.newGame()} className="btn btn-green">
+            <button onClick={() => store.newGame()} className="btn btn-green mr-4">
               New Game
             </button>
           </div>

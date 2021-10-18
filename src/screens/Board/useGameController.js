@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import useAutorunWithSubscription from '../../hooks/useAutorunWithSubscription';
 import useAutorun from '../../hooks/useAutorun';
-import createShot from '../../utils/createShot';
+import createShot from '../../utils/createShot/createShot';
 
 const useGameController = (store) => {
   useEffect(() => {
